@@ -32,6 +32,34 @@ def read_grid():
     return grid, start
 
 
+def at(grid, x, y):
+    if x < 0 or y < 0 or y >= len(grid) or x >= len(grid[0]):
+        return None
+    return grid[y][x]
+
+
 def traverse(grid, start):
+    count = 0
+    x, y = start
+    d = DIRECTION_D[grid[y][x]]
+    while True:
+        if grid[y][x] != "X":
+            count += 1
+        grid[y][x] = "X"
+        for _ in range(len(DIRECTION_D)):
+            dx, dy = d
+            next_char = at(grid, x + dx, y + dy)
+            if next_char is None:
+                return count
+            if next_char != "#":
+                break
+            d = next_direction(d)
+        else:
+            return count
+        x += dx
+        y += dy
+    return count
 
-
+if __name__ == '__main__':
+    grid, start = read_grid()
+    print(traverse(grid, start))
