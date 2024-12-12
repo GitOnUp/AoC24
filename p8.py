@@ -31,10 +31,16 @@ if __name__ == "__main__":
             working_position = c_positions[ixpos]
             other_positions = c_positions[:ixpos] + c_positions[ixpos+1:]
             for other_pos in other_positions:
+                current_working = working_position
                 dx, dy = working_position[0] - other_pos[0], working_position[1] - other_pos[1]
-                x, y = working_position[0] + dx, working_position[1] + dy
-                gp = at(grid, x, y)
-                if gp is not None and gp != "#":
-                    grid[y][x] = "#"
-                    count += 1
+                while True:
+                    x, y = working_position[0] + dx, working_position[1] + dy
+                    gp = at(grid, x, y)
+                    if gp is None:
+                        break
+                    if gp != "#":
+                        grid[y][x] = "#"
+                        count += 1
+                        break
+                    break
     print(count)
