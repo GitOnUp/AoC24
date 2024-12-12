@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 DIRECTIONS = [x for x in "<^>v"]
 
 DIRECTION_D = {
@@ -7,6 +9,7 @@ DIRECTION_D = {
     "v": (0, 1),
 }
 
+D_DIRECTION = {v: k for k, v in DIRECTION_D.items()}
 
 def next_direction(d: (int, int)) -> (int, int):
     if d == (-1, 0):
@@ -24,7 +27,7 @@ def read_grid():
     with open('p6.input.txt', 'r') as f:
         for y, line in enumerate(f.readlines()):
             grid_line = []
-            for x, c in enumerate(line):
+            for x, c in enumerate(line.strip()):
                 if c in DIRECTIONS:
                     start = (x, y)
                 grid_line.append(c)
@@ -39,13 +42,15 @@ def at(grid, x, y):
 
 
 def traverse(grid, start):
+    seen = defaultdict(set)
     count = 0
     x, y = start
     d = DIRECTION_D[grid[y][x]]
+    dc = D_DIRECTION[d]
     while True:
-        if grid[y][x] != "X":
+        if (x, y) not in seen:
             count += 1
-        grid[y][x] = "X"
+        seen[(x, y)].add(dc)
         for _ in range(len(DIRECTION_D)):
             dx, dy = d
             next_char = at(grid, x + dx, y + dy)
@@ -54,11 +59,12 @@ def traverse(grid, start):
             if next_char != "#":
                 break
             d = next_direction(d)
+            dc = D_DIRECTION[d]
         else:
-            return count
+            assert False
         x += dx
         y += dy
-    return count
+
 
 if __name__ == '__main__':
     grid, start = read_grid()
