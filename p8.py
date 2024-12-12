@@ -1,0 +1,40 @@
+from collections import defaultdict
+
+
+def load_grid() -> [str]:
+    with open('p8.input.txt') as f:
+        return [[c for c in l.strip()] for l in f.readlines()]
+
+
+def get_positions(grid) -> {str: [(int, int)]}:
+    positions = defaultdict(list)
+    for y, line in enumerate(grid):
+        for x, c in enumerate(line):
+            if c != ".":
+                positions[c].append((x, y))
+    return positions
+
+
+def at(grid, x, y):
+    if x < 0 or y < 0 or y >= len(grid) or x >= len(grid[y]):
+        return None
+    return grid[y][x]
+
+
+if __name__ == "__main__":
+    grid = load_grid()
+    positions = get_positions(grid)
+    count = 0
+    for c in positions:
+        c_positions = positions[c]
+        for ixpos, pos in enumerate(c_positions):
+            working_position = c_positions[ixpos]
+            other_positions = c_positions[:ixpos] + c_positions[ixpos+1:]
+            for other_pos in other_positions:
+                dx, dy = working_position[0] - other_pos[0], working_position[1] - other_pos[1]
+                x, y = working_position[0] + dx, working_position[1] + dy
+                gp = at(grid, x, y)
+                if gp is not None and gp != "#":
+                    grid[y][x] = "#"
+                    count += 1
+    print(count)
