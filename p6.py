@@ -41,6 +41,10 @@ def at(grid, x, y):
     return grid[y][x]
 
 
+class LoopDetected(Exception):
+    pass
+
+
 def traverse(grid, start):
     seen = defaultdict(set)
     count = 0
@@ -50,12 +54,14 @@ def traverse(grid, start):
     while True:
         if (x, y) not in seen:
             count += 1
+        elif dc in seen[(x, y)]:
+            return -1, seen
         seen[(x, y)].add(dc)
         for _ in range(len(DIRECTION_D)):
             dx, dy = d
             next_char = at(grid, x + dx, y + dy)
             if next_char is None:
-                return count
+                return count, seen
             if next_char != "#":
                 break
             d = next_direction(d)
@@ -68,4 +74,15 @@ def traverse(grid, start):
 
 if __name__ == '__main__':
     grid, start = read_grid()
-    print(traverse(grid, start))
+    count, seen = traverse(grid, start)
+    print(count)
+    loops = 0
+    for coords in seen.keys():
+        x, y = coords
+        if (x, y) == start: continue
+        grid[y][x] = "#"
+        count, _ = traverse(grid, start)
+        if count < 0:
+            loops += 1
+        grid[y][x] = "."
+    print(loops)
