@@ -21,18 +21,6 @@ def at(grid, x, y):
     return grid[y][x]
 
 
-def print_grid(grid):
-    for line in grid:
-        for c in line:
-            if isinstance(c, set):
-                if len(c) == 1:
-                    print("#", end="")
-                else:
-                    print("-", end="")
-            else:
-                print(c, end="")
-        print()
-
 if __name__ == "__main__":
     grid = load_grid()
     positions = get_positions(grid)
@@ -51,13 +39,9 @@ if __name__ == "__main__":
                     gp = at(grid, x, y)
                     if gp is None:
                         break
-                    if not isinstance(gp, set):
-                        grid[y][x] = set()
+                    if gp != "#":
+                        grid[y][x] = "#"
                         resonant_count += 1
-                    if c not in grid[y][x]:
-                        grid[y][x].add(c)
-                        # resonant_count += 1
                     current_working = (x, y)
                     x, y = current_working[0] + dx, current_working[1] + dy
     print(count, resonant_count)
-    print_grid(grid)
