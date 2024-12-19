@@ -27,11 +27,12 @@ def do_blink(stones):
 
 
 if __name__ == "__main__":
-    stones = [(stone, 1) for stone in read_input()]
-    for i in range(75):
-        stones = do_blink(stones)
-    total = 0
-    for stone in stones:
-        _, mult = stone
-        total += mult
-    print(total)
+    for count in [25, 75]:
+        stones = [(stone, 1) for stone in read_input()]
+        for i in range(count):
+            stones = do_blink(stones)
+        total = 0
+        for stone in stones:
+            _, mult = stone
+            total += mult
+        print(total)
