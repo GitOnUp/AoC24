@@ -81,5 +81,3 @@ if __name__ == "__main__":
             seen |= sub_seen
     print(total)
     print(sides_total)
-
-    # not 860467
