@@ -2,7 +2,7 @@ from collections import defaultdict
 
 
 def read_plots():
-    with open("p12.test.input.txt", "r") as f:
+    with open("p12.input.txt", "r") as f:
         plots = [[c for c in line.strip()] for line in f.read().splitlines()]
     return plots
 
@@ -13,12 +13,20 @@ def at(plots, x, y):
     return plots[y][x]
 
 
+SIDE_MAP = {
+    (0, 1): "u",
+    (0, -1): "d",
+    (1, 0): "l",
+    (-1, 0): "r"
+}
+
+
 def flood_fill(plots, x, y):
     char = at(plots, x, y)
     seen = set()
     stack = [(x, y)]
     perimeter = 0
-    side_coords = defaultdict(int)
+    side_coords = defaultdict(set)
     while len(stack):
         x, y = stack.pop()
         if (x, y) in seen:
@@ -30,25 +38,27 @@ def flood_fill(plots, x, y):
             if at(plots, newx, newy) == char:
                 next_coords.append((newx, newy))
             else:
-                side_coords[(newx, newy)] += 1
+                side_coords[(newx, newy)].add(SIDE_MAP[direction])
         perimeter += 4 - len(next_coords)
         stack.extend(next_coords)
 
     sides = 0
     while len(side_coords) > 0:
         x, y = next(iter(side_coords))
-        side_coords[(x, y)] -= 1
-        if side_coords[(x, y)] == 0:
+        if len(side_coords[(x, y)]) == 0:
             del side_coords[(x, y)]
+            continue
+        side_dir = side_coords[(x, y)].pop()
         sides += 1
-        directions = [(-1, 0), (1, 0)]
-        if (x, y-1) in side_coords or (x, y+1) in side_coords:
+        if side_dir in ["r", "l"]:
             directions = [(0, -1), (0, 1)]
+        else:
+            directions = [(-1, 0), (1, 0)]
 
         for direction in directions:
             newx, newy = x + direction[0], y + direction[1]
-            while (newx, newy) in side_coords:
-                side_coords[(newx, newy)] -= 1
+            while (newx, newy) in side_coords and side_dir in side_coords[(newx, newy)]:
+                side_coords[(newx, newy)].remove(side_dir)
                 if side_coords[(newx, newy)] == 0:
                     del side_coords[(newx, newy)]
                 newx, newy = newx + direction[0], newy + direction[1]
