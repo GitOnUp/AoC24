@@ -54,7 +54,7 @@ def read_input():
     maze = []
     start = None
     end = None
-    with open("p16.test.input.txt", "r") as f:
+    with open("p16.input.txt", "r") as f:
         for y, line in enumerate(f.readlines()):
             maze_line = []
             line = line.strip()
@@ -71,7 +71,7 @@ def read_input():
 def traverse(maze, start, end, lowest_score=None):
     heap = [State(0, 0, start)]
     paths = []
-    seen = set()
+    seen = {}
     while len(heap):
         state = heapq.heappop(heap)
         x, y = state.location
@@ -86,10 +86,14 @@ def traverse(maze, start, end, lowest_score=None):
             continue
         if state.tuple_for_seen() in state.history:
             continue
-        if not lowest_score:
-            if state.tuple_for_seen() in seen:
+        seen_state = seen.get(state.tuple_for_seen())
+        if seen_state:
+            if lowest_score and seen_state == state:
+                pass
+            else:
                 continue
-            seen.add(state.tuple_for_seen())
+
+        seen[state.tuple_for_seen()] = state
 
         heapq.heappush(heap, state.as_rotate_cw())
         heapq.heappush(heap, state.as_rotate_ccw())
@@ -100,11 +104,14 @@ def traverse(maze, start, end, lowest_score=None):
     path_tiles.add(end)
     for state in paths:
         for historical in state.history:
-            _, x, y = historical.location
+            _, x, y = historical
             path_tiles.add((x, y))
     for tile in path_tiles:
         x, y = tile
         maze[y][x] = "O"
+
+    for row in maze:
+        print(''.join(row))
     return len(path_tiles)
 
 
