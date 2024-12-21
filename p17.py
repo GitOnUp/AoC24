@@ -6,7 +6,7 @@ PROGRAM_PATTERN = re.compile(r"Program: (.*)")
 def read_input():
     registers = []
     program = None
-    with open("p17.test.input.txt", "r") as f:
+    with open("p17.input.txt", "r") as f:
         for line in f.readlines():
             line = line.strip()
             if not line:
@@ -23,6 +23,7 @@ def read_input():
 
 def run(registers, program):
     ip = 0
+    output = []
 
     def combo_value(operand):
         if operand <= 3:
@@ -43,13 +44,35 @@ def run(registers, program):
             registers[1] = result
             ip += 2
         elif opcode == 2:
+            result = combo_value(operand) % 8
+            registers[1] = result
+            ip += 2
         elif opcode == 3:
+            if registers[0] != 0:
+                ip = operand
+            else:
+                ip += 2
         elif opcode == 4:
+            result = registers[1] ^ registers[2]
+            registers[1] = result
+            ip += 2
         elif opcode == 5:
+            output.append(combo_value(operand) % 8)
+            ip += 2
         elif opcode == 6:
+            result = registers[0] // 2**combo_value(operand)
+            registers[1] = result
+            ip += 2
         elif opcode == 7:
+            result = registers[0] // 2 ** combo_value(operand)
+            registers[2] = result
+            ip += 2
         else:
             assert False
+    return output
+
 
 if __name__ == "__main__":
-    print(read_input())
+    registers, program = read_input()
+    output = run(registers[:], program)
+    print(",".join([str(i) for i in output]))
