@@ -79,15 +79,17 @@ if __name__ == "__main__":
             output_arr.append(output)
     print(",".join([str(i) for i in output_arr]))
 
-    a = 0
-    while True:
-        a = int(input("Test A: "))
-        ip = 0
-        output_arr = []
-        working_registers = [a] + registers[1:]
-        while ip < len(program):
-            ip, output = process_one(working_registers, program, ip)
-            if output is not None:
-                output_arr.append(output)
-        print("Output:  " + ",".join([str(i) for i in output_arr]))
-        print("Program: " + ",".join([str(i) for i in program]))
+"""
+Program:
+
+2,4: B = A % 8
+1,1: B = B ^ 1
+7,5: C = A / B
+1,5: B = B ^ 5
+4,2: B = B ^ C
+5,5: output.append(B % 8)
+0,3: A = A // (2**3)
+3,0: If A > 0 loop to 2,4
+
+- Start with last output and feed value of A to make it hit that, and work backwards
+"""
