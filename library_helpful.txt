@@ -1,0 +1,9 @@
+Ideas for helpful common code in these:
+
+Coordinate classes
+Grid classes
+- Explicitly OMITTING help on e.g. bfs, will keep private
+Reading lines with sections (segment into lines for section A, B, etc)
+Test framework
+Logging and debugging tools
+Git template for Python
