@@ -21,35 +21,43 @@ def read_input():
 if __name__ == "__main__":
     corruptions, dims = read_input()
 
-    cset = set(corruptions[:1024])
-    seen = set()
+    def find(n_corrupt):
+        cset = set(corruptions[:n_corrupt])
+        seen = set()
 
-    @dataclass
-    class State:
-        x: int
-        y: int
-        path: set
+        @dataclass
+        class State:
+            x: int
+            y: int
+            path: set
 
-        def __lt__(self, other):
-            return self.y < other.y and self.x < other.x
+            def __lt__(self, other):
+                return self.y < other.y and self.x < other.x
 
-        def pos(self):
-            return (self.x, self.y)
+            def pos(self):
+                return (self.x, self.y)
 
-    search = deque([State(0, 0, set())])
-    while len(search) > 0:
-        head = search.popleft()
-        if head.pos() == dims:
-            print(len(head.path))
+        search = deque([State(0, 0, set())])
+        while len(search) > 0:
+            head = search.popleft()
+            if head.pos() == dims:
+                return len(head.path)
+                break
+            for d in DIRECTIONS:
+                dx, dy = d
+                nx, ny = head.x + dx, head.y + dy
+                if nx < 0 or ny < 0 or nx > dims[0] or ny > dims[1]:
+                    continue
+                if (nx, ny) in seen:
+                    continue
+                if (nx, ny) in cset:
+                    continue
+                seen.add((nx, ny))
+                search.append(State(nx, ny, head.path | {(nx, ny)}))
+        return None
+
+    print(find(1024))
+    for i in range(1024, len(corruptions)):
+        if not find(i):
+            print(f"{i-1}th", corruptions[i-1])
             break
-        for d in DIRECTIONS:
-            dx, dy = d
-            nx, ny = head.x + dx, head.y + dy
-            if nx < 0 or ny < 0 or nx > dims[0] or ny > dims[1]:
-                continue
-            if (nx, ny) in seen:
-                continue
-            if (nx, ny) in cset:
-                continue
-            seen.add((nx, ny))
-            search.append(State(nx, ny, head.path | {(nx, ny)}))
