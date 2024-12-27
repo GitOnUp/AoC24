@@ -19,21 +19,29 @@ def solve():
         tmap[towel[0]].append(towel)
 
     @cache
-    def is_possible(_desired, _current):
-        if _desired == _current:
-            return True
-        next_char = _desired[len(_current)]
+    def count_possible(_remaining):
+        if not _remaining:
+            return 1
+        next_char = _remaining[0]
+        total = 0
         for next_pattern in tmap.get(next_char, []):
-            if _desired[len(_current):len(_current)+len(next_pattern)] == next_pattern and is_possible(_desired, _current + next_pattern):
-                return True
-        return False
+            if _remaining[:len(next_pattern)] != next_pattern:
+                continue
+            next_remaining = _remaining[len(next_pattern):]
+            total += count_possible(next_remaining)
+        return total
 
+    possible = 0
     total = 0
     for d in desired:
-        if is_possible(d, ""):
-            total += 1
+        subtotal = count_possible(d)
+        total += subtotal
+        if subtotal:
+            possible += 1
 
+    print(possible)
     print(total)
+
 
 if __name__ == "__main__":
     solve()
