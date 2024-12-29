@@ -29,23 +29,35 @@ class Grid:
                 gridline.append(c)
             self.grid.append(gridline)
 
+    def in_grid(self, x: int, y: int):
+        return 0 <= y < len(self.grid) and 0 <= x < len(self.grid[y])
+
     def at(self, x: int, y: int) -> Any:
-        if x < 0 or y < 0 or y >= len(self.grid) or x >= len(self.grid[y]):
-            return None
-        return self.grid[y][x]
+        if self.in_grid(x, y):
+            return self.grid[y][x]
+        return None
 
     def set(self, x: int, y: int, val: Any) -> None:
-        if x < 0 or y < 0 or y >= len(self.grid) or x >= len(self.grid[y]):
-            return None
-        self.grid[y][x] = val
+        if self.in_grid(x, y):
+            self.grid[y][x] = val
 
     def moves_from(self, x: int, y: int) -> (int, int):
         for d in DIRECTIONS:
             dx, dy = d
             nx, ny = dx + x, dy + y
-            if nx < 0 or ny < 0 or ny >= len(self.grid) or nx >= len(self.grid[y]):
-                continue
-            yield nx, ny
+            if self.in_grid(nx, ny):
+                yield nx, ny
+
+    def points_distance_from(self, x: int, y: int, dist: int):
+        points = set()
+        for dx in range(0, dist + 1):
+            dy = dist - dx
+            for mult in [(1, 1), (-1, 1), (1, -1), (-1, -1)]:
+                mx, my = mult
+                px, py = x + (mx * dx), y + (my * dy)
+                if self.in_grid(px, py) and (px, py) not in points:
+                    yield px, py
+                    points.add((px, py))
 
 
 def set_distances(grid: Grid) -> [(int, int)]:
@@ -69,25 +81,24 @@ def set_distances(grid: Grid) -> [(int, int)]:
 if __name__ == "__main__":
     grid = load_input()
     path = set_distances(grid)
-    print(len(path) - 1)
 
-    save_100s = 0
+    save_100s_2 = 0
+    save_100s_20 = 0
     for locxy in path:
-        for direction in DIRECTIONS:
-            dx, dy = direction
-            mx, my = locxy[0] + dx, locxy[1] + dy
-            at_move = grid.at(mx, my)
-            if at_move == WALL:
-                start_cost = grid.at(*locxy)
+        start_cost = grid.at(*locxy)
+        for dist in range(2, 21):
+            for (px, py) in grid.points_distance_from(*locxy, dist):
                 assert isinstance(start_cost, int)
-                end_cost = grid.at(mx + dx, my + dy)
+                end_cost = grid.at(px, py)
                 if not isinstance(end_cost, int):
                     continue
-                diff = end_cost - start_cost - 2
+                diff = end_cost - start_cost - dist
                 if diff <= 0:
                     continue
                 if diff >= 100:
-                    save_100s += 1
-    print(save_100s)
-
+                    save_100s_20 += 1
+                    if dist == 2:
+                        save_100s_2 += 1
+    print(save_100s_2)
+    print(save_100s_20)
 
