@@ -22,7 +22,8 @@ DPAD_LOCS = {
 }
 
 
-def _path(coord_map: {str: (int, int)}, char: str, x: int, y: int, press: bool) -> [str]:
+def _path(is_keypad: bool, char: str, x: int, y: int, press: bool) -> [str]:
+    coord_map = KEYPAD_LOCS if is_keypad else DPAD_LOCS
     blankx, blanky = coord_map[BLANK]
     nx, ny = coord_map[char]
     dx, dy = nx - x, ny - y
@@ -52,7 +53,7 @@ class Keypad:
             self.x, self.y = xy
 
     def paths_to(self, char: str, press: bool = True) -> [str]:
-        return _path(KEYPAD_LOCS, char, self.x, self.y, press)
+        return _path(True, char, self.x, self.y, press)
 
     @classmethod
     def move_to(cls, char: str) -> "Keypad":
@@ -68,7 +69,7 @@ class Dpad:
             self.x, self.y = xy
 
     def paths_to(self, char: str, press: bool = True) -> [str]:
-        return _path(DPAD_LOCS, char, self.x, self.y, press)
+        return _path(False, char, self.x, self.y, press)
 
     @classmethod
     def move_to(cls, char: str) -> "Dpad":
@@ -87,19 +88,6 @@ def find_paths(pad: Dpad | Keypad, seq: str) -> [str]:
         paths = new_paths
         pad = pad.move_to(c)
     return paths
-
-
-def naive_complexity(seq: str) -> int:
-    k = Keypad()
-    d1 = Dpad()
-    d2 = Dpad()
-    kpaths = sorted(find_paths(k, seq))
-    kp = kpaths[0]
-    d1paths = sorted(find_paths(d1, kp))
-    d1p = d1paths[0]
-    d2paths = find_paths(d2, d1p)
-    d2p = d2paths[0]
-    return len(d2p) * int(seq[:-1])
 
 
 def search_complexities(pad_types: [type], seq: str) -> int:
