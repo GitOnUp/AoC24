@@ -86,31 +86,11 @@ def find_paths(pad: Pad, seq: str) -> [str]:
     return paths
 
 
-def search_complexities(pad_types: [type], seq: str) -> int:
-    init_paths = find_paths(pad_types[0](), seq)
-    current = list(zip(init_paths, [1] * len(init_paths)))
-    cost = None
-    while current:
-        path, pad_type_ix = current.pop()
-        if pad_type_ix == len(pad_types):
-            if cost is None or cost > len(path):
-                cost = len(path)
-            continue
-        next_paths = find_paths(pad_types[pad_type_ix](), path)
-        for p in next_paths:
-            current.append((p, pad_type_ix + 1))
-    return cost * int(seq[:-1])
-
-
 SPLIT_REGEX = re.compile(r"[v^<>]*A")
-find_min_cache = {}  # {subpath: length}
 
 
 @cache
 def find_min(subpath: str, level: int, maxlevel: int) -> int:
-    # cached = find_min_cache.get(subpath)
-    # if cached:
-    #     return cached
     if level == maxlevel:
         return len(subpath)
     elements = SPLIT_REGEX.findall(subpath)
@@ -119,7 +99,6 @@ def find_min(subpath: str, level: int, maxlevel: int) -> int:
     for element in elements:
         element_paths = find_paths(pad, element)
         total_length += min([find_min(p, level+1, maxlevel) for p in element_paths])
-    # find_min_cache[subpath] = total_length
     return total_length
 
 
