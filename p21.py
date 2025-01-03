@@ -1,4 +1,6 @@
-from typing import Optional, Tuple
+import re
+from functools import cache
+from typing import Union, Tuple
 
 
 def read_input():
@@ -22,6 +24,7 @@ DPAD_LOCS = {
 }
 
 
+@cache
 def _path(is_keypad: bool, char: str, x: int, y: int, press: bool) -> [str]:
     coord_map = KEYPAD_LOCS if is_keypad else DPAD_LOCS
     blankx, blanky = coord_map[BLANK]
@@ -44,41 +47,34 @@ def _path(is_keypad: bool, char: str, x: int, y: int, press: bool) -> [str]:
         return [x_first, y_first]
 
 
-class Keypad:
-    def __init__(self, xy: Optional[Tuple[int, int]] = None):
-        if xy is None:
-            self.x = 2
-            self.y = 3
+class Pad:
+    def __init__(self, coords: {str: (int, int)}, start: Union[Tuple[int, int], str]):
+        self.coords = coords
+        if isinstance(start, str):
+            self.x, self.y = self.coords[start]
         else:
-            self.x, self.y = xy
+            self.x, self.y = start
 
     def paths_to(self, char: str, press: bool = True) -> [str]:
-        return _path(True, char, self.x, self.y, press)
+        return _path(self.coords is KEYPAD_LOCS, char, self.x, self.y, press)
 
-    @classmethod
-    def move_to(cls, char: str) -> "Keypad":
-        return cls(KEYPAD_LOCS[char])
-
-
-class Dpad:
-    def __init__(self, xy: Optional[Tuple[int, int]] = None):
-        if xy is None:
-            self.x = 2
-            self.y = 0
-        else:
-            self.x, self.y = xy
-
-    def paths_to(self, char: str, press: bool = True) -> [str]:
-        return _path(False, char, self.x, self.y, press)
-
-    @classmethod
-    def move_to(cls, char: str) -> "Dpad":
-        return cls(DPAD_LOCS[char])
+    def move_to(self, char: str) -> None:
+        self.x, self.y = self.coords[char]
 
 
-def find_paths(pad: Dpad | Keypad, seq: str) -> [str]:
+class Keypad(Pad):
+    def __init__(self):
+        super().__init__(KEYPAD_LOCS, (2, 3))
+
+
+class Dpad(Pad):
+    def __init__(self):
+        super().__init__(DPAD_LOCS, (2, 0))
+
+
+def find_paths(pad: Pad, seq: str) -> [str]:
     paths = pad.paths_to(seq[0])
-    pad = pad.move_to(seq[0])
+    pad.move_to(seq[0])
     for c in seq[1:]:
         new_paths = []
         for path in paths:
@@ -86,7 +82,7 @@ def find_paths(pad: Dpad | Keypad, seq: str) -> [str]:
             for new_subpath in new_subpaths:
                 new_paths.append(path + new_subpath)
         paths = new_paths
-        pad = pad.move_to(c)
+        pad.move_to(c)
     return paths
 
 
@@ -106,16 +102,38 @@ def search_complexities(pad_types: [type], seq: str) -> int:
     return cost * int(seq[:-1])
 
 
+SPLIT_REGEX = re.compile(r"[v^<>]*A")
+find_min_cache = {}  # {subpath: length}
+
+
+@cache
+def find_min(subpath: str, level: int, maxlevel: int) -> int:
+    # cached = find_min_cache.get(subpath)
+    # if cached:
+    #     return cached
+    if level == maxlevel:
+        return len(subpath)
+    elements = SPLIT_REGEX.findall(subpath)
+    pad = Dpad()
+    total_length = 0
+    for element in elements:
+        element_paths = find_paths(pad, element)
+        total_length += min([find_min(p, level+1, maxlevel) for p in element_paths])
+    # find_min_cache[subpath] = total_length
+    return total_length
+
+
+def score_sequence(seq: str, levels: int) -> int:
+    kpaths = find_paths(Keypad(), seq)
+    return min([find_min(kpath, 0, levels) for kpath in kpaths]) * int(seq[:-1])
+
+
 if __name__ == "__main__":
-    k = Keypad()
     sequences = read_input()
-    total = 0
-    first_types = [Keypad, Dpad, Dpad]
+    p1_total = 0
+    p2_total = 0
     for s in sequences:
-        total += search_complexities(first_types, s)
-    print(total)
-    second_types = [Keypad] + [Dpad] * 25
-    total = 0
-    for s in sequences:
-        total += search_complexities(second_types, s)
-    print(total)
+        p1_total += score_sequence(s, 2)
+        p2_total += score_sequence(s, 25)
+    print(p1_total)
+    print(p2_total)
