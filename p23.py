@@ -17,21 +17,6 @@ def build_graph(links: [(str, str)]):
     return graph
 
 
-def find_cycles(graph: {str: {str}}):
-    seen_cycles = set()
-    for starting_node in graph:
-        paths = deque([[starting_node]])
-        while paths:
-            path = paths.popleft()
-            if len(path) == 3:
-                if starting_node in graph[path[-1]]:
-                    seen_cycles.add(",".join(sorted(path)))
-            else:
-                for next_node in graph[path[-1]]:
-                    paths.append(path + [next_node])
-    return seen_cycles
-
-
 def find_next_networks(prev_networks: [set], graph: {str: {str}}):
     next_networks = []
     seen = set()
