@@ -38,7 +38,8 @@ def find_value(circuit, key):
 
 def get_wire_nums(circuit, prefix: str) -> int:
     total = 0
-    for i, k in enumerate(sorted(filter(lambda key: key[0] == prefix, circuit.keys()))):
+    keys = list(sorted(filter(lambda key: key[0] == prefix, circuit.keys())))
+    for i, k in enumerate(keys):
         total += find_value(circuit, k) * 2**i
     return total
 
@@ -47,8 +48,8 @@ if __name__ == "__main__":
     circuit = read_input()
     x = get_wire_nums(circuit, "x")
     y = get_wire_nums(circuit, "y")
+    expected = x + y
     print(x+y)
-    value = 0
-    for i, k in enumerate(sorted(filter(lambda key: key[0] == "z", circuit.keys()))):
-        value += find_value(circuit, k) * (2**i)
-    print(value)
+    z = get_wire_nums(circuit, "z")
+    print(z)
+    print("{0:b}".format(expected ^ z))
