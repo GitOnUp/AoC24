@@ -42,4 +42,4 @@ if __name__ == "__main__":
         elif can_compute(total, nums, with_concat=True):
             with_concat += total
 
-    print(total_totals, with_concat)
+    print(total_totals, with_concat, sep="\n")

@@ -110,8 +110,6 @@ def traverse(maze, start, end, lowest_score=None):
         x, y = tile
         maze[y][x] = "O"
 
-    for row in maze:
-        print(''.join(row))
     return len(path_tiles)
 
 

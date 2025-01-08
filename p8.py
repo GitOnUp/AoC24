@@ -25,6 +25,23 @@ if __name__ == "__main__":
     grid = load_grid()
     positions = get_positions(grid)
     count = 0
+    for c in positions:
+        c_positions = positions[c]
+        for ixpos, pos in enumerate(c_positions):
+            working_position = c_positions[ixpos]
+            other_positions = c_positions[:ixpos] + c_positions[ixpos+1:]
+            for other_pos in other_positions:
+                dx, dy = working_position[0] - other_pos[0], working_position[1] - other_pos[1]
+                x, y = working_position[0] + dx, working_position[1] + dy
+                gp = at(grid, x, y)
+                if gp is not None and gp != "#":
+                    grid[y][x] = "#"
+                    count += 1
+    print(count)
+
+    grid = load_grid()
+    positions = get_positions(grid)
+    count = 0
     resonant_count = 0
     for c in positions:
         c_positions = positions[c]
@@ -44,4 +61,4 @@ if __name__ == "__main__":
                         resonant_count += 1
                     current_working = (x, y)
                     x, y = current_working[0] + dx, current_working[1] + dy
-    print(count, resonant_count)
+    print(resonant_count)

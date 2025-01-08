@@ -59,5 +59,5 @@ if __name__ == "__main__":
     print(find(1024))
     for i in range(1024, len(corruptions)):
         if not find(i):
-            print(f"{i-1}th", corruptions[i-1])
+            print(",".join([str(i) for i in corruptions[i-1]]))
             break

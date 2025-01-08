@@ -23,4 +23,4 @@ if __name__ == "__main__":
                 sum += n1 * n2
                 if enabled:
                     enabled_sum += n1 * n2
-    print(sum, enabled_sum)
+    print(sum, enabled_sum, sep="\n")

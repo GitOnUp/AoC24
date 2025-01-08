@@ -69,4 +69,4 @@ def parse():
 
 
 if __name__ == "__main__":
-    print(parse())
+    print(*parse(), sep="\n")
