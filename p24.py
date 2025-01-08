@@ -90,13 +90,7 @@ def traverse_gates(circuit):
         for outwire, val in list(circuit.items()):
             if not isinstance(val, Calc):
                 continue
-            if outwire == wires[0]:
-                del circuit[outwire]
-                circuit[wires[1]] = val
-            elif outwire == wires[1]:
-                del circuit[outwire]
-                circuit[wires[0]] = val
-            elif wires[0] == val.wires[0]:
+            if wires[0] == val.wires[0]:
                 circuit[outwire] = Calc([wires[1], val.wires[1]], val.op)
             elif wires[0] == val.wires[1]:
                 circuit[outwire] = Calc([wires[1], val.wires[0]], val.op)
@@ -104,7 +98,7 @@ def traverse_gates(circuit):
                 circuit[outwire] = Calc([wires[0], val.wires[1]], val.op)
             elif wires[1] == val.wires[1]:
                 circuit[outwire] = Calc([wires[0], val.wires[0]], val.op)
-        swaps.append((wires[0], wires[1]))
+        swaps.extend(wires)
 
     def find_exact(wires, op) -> str:
         results = find_exact_inputs(circuit, wires)
@@ -113,16 +107,15 @@ def traverse_gates(circuit):
                 return outwire
 
         swap_possibles = []
-        for outwire, val in circuit.items():
+        for _, val in circuit.items():
             if not isinstance(val, Calc):
                 continue
             if (wires[0] in val.wires or wires[1] in val.wires) and val.op == op:
-                swap_possibles.append((outwire, val))
-        assert 
-        for swap_possible in swap_possibles:
-            # The ones needing swapping should already be renamed;
-            pass
-        assert False
+                swap_possibles.append(val)
+        assert len(swap_possibles) == 1
+        wires_to_swap = list(filter(lambda x: x not in wires, swap_possibles[0].wires)) + list(filter(lambda x: x not in swap_possibles[0].wires, wires))
+        swap_wires(wires_to_swap)
+        return find_exact(wires, op)
 
     # start with x00, y00 and make the carry, no carry to take into account for least sig
     outwire = find_exact(["x00", "y00"], "AND")
@@ -130,7 +123,6 @@ def traverse_gates(circuit):
 
     # then make half adds and half add carries for individual bits
     # if exact match isn't found, find whichever one is there and then swap the other with the wire shared with it
-    # TODO how to know which one is right?  name map probably has a clue
     ixbit = 1
     while f"x{str(ixbit).zfill(2)}" in circuit:
         prev_suffix = str(ixbit-1).zfill(2)
@@ -142,9 +134,6 @@ def traverse_gates(circuit):
         outwire = find_exact([f"{c}{suffix}" for c in "xy"], "AND")
         circuit = replace_wire_name(outwire, f"{HALF_ADD_CARRY_PRE}{suffix}")
 
-        outwire = find_exact([f"{HALF_ADD_PRE}{suffix}", f"{CARRY_PRE}{prev_suffix}"], "XOR")
-        circuit = replace_wire_name(outwire, f"{ADD_WITH_CARRY_PRE}{suffix}")
-
         outwire = find_exact([f"{CARRY_PRE}{prev_suffix}", f"{HALF_ADD_PRE}{suffix}"], "AND")
         circuit = replace_wire_name(outwire, f"{FULL_ADD_CARRY_PRE}{suffix}")
 
@@ -152,15 +141,12 @@ def traverse_gates(circuit):
         circuit = replace_wire_name(outwire, f"{CARRY_PRE}{suffix}")
 
         ixbit += 1
+    return ",".join(sorted([wire if len(wire) == 3 else name_map[wire] for wire in swaps]))
 
 
 if __name__ == "__main__":
     circuit = read_input()
-    x = get_wire_nums(circuit, "x")
-    y = get_wire_nums(circuit, "y")
-    expected = x + y
-    print(expected)
-    z = get_wire_nums(circuit, "z")
-    print(z)
+    print(get_wire_nums(circuit, "z"))
 
-    traverse_gates(circuit)
+    swaps = traverse_gates(circuit)
+    print(swaps)
