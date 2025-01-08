@@ -88,9 +88,23 @@ def traverse_gates(circuit):
 
     def swap_wires(wires: [str]) -> None:
         for outwire, val in list(circuit.items()):
-            # TODO
-            pass
-
+            if not isinstance(val, Calc):
+                continue
+            if outwire == wires[0]:
+                del circuit[outwire]
+                circuit[wires[1]] = val
+            elif outwire == wires[1]:
+                del circuit[outwire]
+                circuit[wires[0]] = val
+            elif wires[0] == val.wires[0]:
+                circuit[outwire] = Calc([wires[1], val.wires[1]], val.op)
+            elif wires[0] == val.wires[1]:
+                circuit[outwire] = Calc([wires[1], val.wires[0]], val.op)
+            elif wires[1] == val.wires[0]:
+                circuit[outwire] = Calc([wires[0], val.wires[1]], val.op)
+            elif wires[1] == val.wires[1]:
+                circuit[outwire] = Calc([wires[0], val.wires[0]], val.op)
+        swaps.append((wires[0], wires[1]))
 
     def find_exact(wires, op) -> str:
         results = find_exact_inputs(circuit, wires)
@@ -104,6 +118,7 @@ def traverse_gates(circuit):
                 continue
             if (wires[0] in val.wires or wires[1] in val.wires) and val.op == op:
                 swap_possibles.append((outwire, val))
+        assert 
         for swap_possible in swap_possibles:
             # The ones needing swapping should already be renamed;
             pass
