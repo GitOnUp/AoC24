@@ -4,7 +4,7 @@ from collections import deque, defaultdict
 def read_input():
     with open("p23.input.txt", "r") as f:
         for line in f.readlines():
-            link = line.strip().split('-')
+            link = line.strip().split("-")
             yield link[0], link[1]
 
 
@@ -50,4 +50,3 @@ if __name__ == "__main__":
     while len(networks) > 1:
         networks = find_next_networks(networks, g)
     print(",".join(sorted(networks[0])))
-

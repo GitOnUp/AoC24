@@ -20,7 +20,9 @@ def next_secret(s: int) -> int:
     return prune(mix(s, s * 2048))
 
 
-def update_changes(changes: (int, int, int, int), new_change: int) -> (int, int, int, int):
+def update_changes(
+    changes: (int, int, int, int), new_change: int
+) -> (int, int, int, int):
     _, a, b, c = changes
     return a, b, c, new_change
 

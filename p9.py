@@ -1,4 +1,3 @@
-
 class FileDef:
     id: int
     start: int
@@ -26,7 +25,7 @@ def pack(blocks):
         next_reversed = reversed_indexes[reversed_ix_ix]
         id = blocks[next_reversed]
         blocks[ix] = id
-        del[blocks[next_reversed]]
+        del [blocks[next_reversed]]
         reversed_ix_ix += 1
         ix += 1
 
@@ -49,7 +48,9 @@ if __name__ == "__main__":
     for i, c in enumerate(ftab):
         if i % 2 == 0:
             file_length = int(c)
-            files.append(FileDef(current_id, current_index, current_index + file_length))
+            files.append(
+                FileDef(current_id, current_index, current_index + file_length)
+            )
             for ix in range(file_length):
                 blocks[current_index] = current_id
                 current_index += 1
@@ -64,9 +65,14 @@ if __name__ == "__main__":
     while iback >= 0:
         last_file = files[iback]
         for i in range(len(files[:iback])):
-            gap = files[i+1].start - files[i].end
+            gap = files[i + 1].start - files[i].end
             if gap >= last_file.size:
-                files = files[:i+1] + [last_file] + files[i+1:iback] + files[iback+1:]
+                files = (
+                    files[: i + 1]
+                    + [last_file]
+                    + files[i + 1 : iback]
+                    + files[iback + 1 :]
+                )
                 last_file.start = files[i].end
                 last_file.end = last_file.start + last_file.size
                 break

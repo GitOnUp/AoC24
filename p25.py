@@ -2,9 +2,10 @@ def read_input():
     locks = []
     keys = []
     with open("p25.input.txt", "r") as f:
+
         def process_lock(lock):
             depths = [0] * len(lock[0])
-            for line in lock[1:len(lock)-1]:
+            for line in lock[1 : len(lock) - 1]:
                 for i, c in enumerate(line):
                     if c == "#":
                         depths[i] += 1
@@ -12,7 +13,7 @@ def read_input():
 
         def process_key(key):
             heights = [5] * len(key[0])
-            for line in key[1:len(key)-1]:
+            for line in key[1 : len(key) - 1]:
                 for i, c in enumerate(line):
                     if c == ".":
                         heights[i] -= 1

@@ -24,7 +24,11 @@ class State:
         return hash((self.direction_id, self.score, self.location))
 
     def __eq__(self, other):
-        return self.direction_id == other.direction_id and self.score == other.score and self.location == other.location
+        return (
+            self.direction_id == other.direction_id
+            and self.score == other.score
+            and self.location == other.location
+        )
 
     def tuple_for_seen(self):
         return (self.direction_id, self.location[0], self.location[1])
@@ -36,18 +40,33 @@ class State:
         dir_id = self.direction_id + 1
         if dir_id == len(DIRECTIONS):
             dir_id = 0
-        return State(dir_id, self.score+1000, self.location, history=self.history | {self.tuple_for_seen()})
+        return State(
+            dir_id,
+            self.score + 1000,
+            self.location,
+            history=self.history | {self.tuple_for_seen()},
+        )
 
     def as_rotate_ccw(self):
         dir_id = self.direction_id - 1
         if dir_id < 0:
             dir_id = len(DIRECTIONS) - 1
-        return State(dir_id, self.score+1000, self.location, history=self.history | {self.tuple_for_seen()})
+        return State(
+            dir_id,
+            self.score + 1000,
+            self.location,
+            history=self.history | {self.tuple_for_seen()},
+        )
 
     def as_move(self):
         x, y = self.location
         dx, dy = DIRECTIONS[self.direction_id]
-        return State(self.direction_id, self.score+1, (x + dx, y + dy), history=self.history | {self.tuple_for_seen()})
+        return State(
+            self.direction_id,
+            self.score + 1,
+            (x + dx, y + dy),
+            history=self.history | {self.tuple_for_seen()},
+        )
 
 
 def read_input():

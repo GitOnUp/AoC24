@@ -2,7 +2,7 @@ from collections import defaultdict
 
 
 def parse():
-    with open('p5.input.txt') as f:
+    with open("p5.input.txt") as f:
         rules = defaultdict(list)
         in_rules = True
 
@@ -14,12 +14,12 @@ def parse():
                 if not line:
                     in_rules = False
                     continue
-                first, second = [int(x) for x in line.split('|')]
+                first, second = [int(x) for x in line.split("|")]
                 rules[first].append((first, second))
                 rules[second].append((first, second))
                 continue
 
-            update = [int(x) for x in line.split(',')]
+            update = [int(x) for x in line.split(",")]
             indexes = {page: index for index, page in enumerate(update)}
             middle = update[len(update) // 2]
 
@@ -54,7 +54,9 @@ def parse():
                         if len(candidates) == 1:
                             added_item = candidates.pop()
                             new_update.append(added_item)
-                            relevant_rules = set(filter(lambda r: r[0] != added_item, relevant_rules))
+                            relevant_rules = set(
+                                filter(lambda r: r[0] != added_item, relevant_rules)
+                            )
                             break
                 new_middle = new_update[len(new_update) // 2]
                 return new_middle

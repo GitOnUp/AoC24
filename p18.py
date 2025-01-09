@@ -7,13 +7,13 @@ DIRECTIONS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 def read_input():
     corruptions = []
     fname = "p18.input.txt"
-    dims = (70,70)
+    dims = (70, 70)
     if "test" in fname:
         dims = (6, 6)
     with open(fname, "r") as f:
         for line in f.readlines():
             line = line.strip()
-            x, y = [int(i) for i in line.split(',')]
+            x, y = [int(i) for i in line.split(",")]
             corruptions.append((x, y))
     return corruptions, dims
 
@@ -59,5 +59,5 @@ if __name__ == "__main__":
     print(find(1024))
     for i in range(1024, len(corruptions)):
         if not find(i):
-            print(",".join([str(i) for i in corruptions[i-1]]))
+            print(",".join([str(i) for i in corruptions[i - 1]]))
             break

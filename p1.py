@@ -7,7 +7,7 @@ INPUT_LINE_MATCHER = re.compile(r"(\d+)\s+(\d+)")
 def get_inputs():
     l_arr = []
     r_arr = []
-    for line in open('p1.input.txt', 'r').readlines():
+    for line in open("p1.input.txt", "r").readlines():
         parsed = INPUT_LINE_MATCHER.match(line.strip())
         l, r = parsed.groups(0)
         l_arr.append(int(l))

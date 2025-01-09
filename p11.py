@@ -16,8 +16,8 @@ def do_blink(stones):
             dstr = str(val)
             l = len(dstr)
             if l % 2 == 0:
-                new_stones.append((int(dstr[:l//2]), mult))
-                new_stones.append((int(dstr[l//2:]), mult))
+                new_stones.append((int(dstr[: l // 2]), mult))
+                new_stones.append((int(dstr[l // 2 :]), mult))
             else:
                 new_stones.append((val * 2024, mult))
     counts = defaultdict(int)

@@ -1,12 +1,12 @@
 import re
 
-MATCHER = re.compile(r'mul\((\d+),(\d+)\)|(do\(\))|(don\'t\(\))')
+MATCHER = re.compile(r"mul\((\d+),(\d+)\)|(do\(\))|(don\'t\(\))")
 
 if __name__ == "__main__":
     sum = 0
     enabled_sum = 0
     enabled = True
-    with open('p3.input.txt') as f:
+    with open("p3.input.txt") as f:
         instructions = f.read()
         matches = MATCHER.findall(instructions)
         for match in matches:

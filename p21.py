@@ -12,15 +12,27 @@ BLANK = ""
 ACTIVATE = "A"
 
 KEYPAD_LOCS = {
-    "7": (0, 0), "8": (1, 0), "9": (2, 0),
-    "4": (0, 1), "5": (1, 1), "6": (2, 1),
-    "1": (0, 2), "2": (1, 2), "3": (2, 2),
-    "": (0, 3), "0": (1, 3), "A": (2, 3),
+    "7": (0, 0),
+    "8": (1, 0),
+    "9": (2, 0),
+    "4": (0, 1),
+    "5": (1, 1),
+    "6": (2, 1),
+    "1": (0, 2),
+    "2": (1, 2),
+    "3": (2, 2),
+    "": (0, 3),
+    "0": (1, 3),
+    "A": (2, 3),
 }
 
 DPAD_LOCS = {
-    "": (0, 0), "^": (1, 0), "A": (2, 0),
-    "<": (0, 1), "v": (1, 1), ">": (2, 1)
+    "": (0, 0),
+    "^": (1, 0),
+    "A": (2, 0),
+    "<": (0, 1),
+    "v": (1, 1),
+    ">": (2, 1),
 }
 
 
@@ -98,7 +110,7 @@ def find_min(subpath: str, level: int, maxlevel: int) -> int:
     total_length = 0
     for element in elements:
         element_paths = find_paths(pad, element)
-        total_length += min([find_min(p, level+1, maxlevel) for p in element_paths])
+        total_length += min([find_min(p, level + 1, maxlevel) for p in element_paths])
     return total_length
 
 

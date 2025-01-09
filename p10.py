@@ -23,7 +23,7 @@ def trailhead_reachable(topography, height_start, x, y):
     height_start += 1
     rval = set()
     rating = 0
-    for newx, newy in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
+    for newx, newy in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
         reached, subrating = trailhead_reachable(topography, height_start, newx, newy)
         rval |= reached
         rating += subrating

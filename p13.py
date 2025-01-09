@@ -23,12 +23,14 @@ class Machine:
 
 
 def read_input() -> [Machine]:
-    with open("p13.input.txt", 'r') as f:
-        lines = list(filter(lambda line: line, [line.strip() for line in f.readlines()]))
+    with open("p13.input.txt", "r") as f:
+        lines = list(
+            filter(lambda line: line, [line.strip() for line in f.readlines()])
+        )
 
     machines = []
     for i in range(0, len(lines), 3):
-        machines.append(Machine.parse(lines[i:i+3]))
+        machines.append(Machine.parse(lines[i : i + 3]))
 
     return machines
 
@@ -56,6 +58,9 @@ if __name__ == "__main__":
     print(total)
     total = 0
     for machine in machines:
-        machine.prize = (machine.prize[0] + 10000000000000, machine.prize[1] + 10000000000000)
+        machine.prize = (
+            machine.prize[0] + 10000000000000,
+            machine.prize[1] + 10000000000000,
+        )
         total += play_machine(machine)
     print(total)

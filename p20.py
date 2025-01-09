@@ -87,7 +87,7 @@ if __name__ == "__main__":
     for locxy in path:
         start_cost = grid.at(*locxy)
         for dist in range(2, 21):
-            for (px, py) in grid.points_distance_from(*locxy, dist):
+            for px, py in grid.points_distance_from(*locxy, dist):
                 assert isinstance(start_cost, int)
                 end_cost = grid.at(px, py)
                 if not isinstance(end_cost, int):
@@ -101,4 +101,3 @@ if __name__ == "__main__":
                         save_100s_2 += 1
     print(save_100s_2)
     print(save_100s_20)
-

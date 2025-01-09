@@ -13,12 +13,7 @@ def at(plots, x, y):
     return plots[y][x]
 
 
-SIDE_MAP = {
-    (0, 1): "u",
-    (0, -1): "d",
-    (1, 0): "l",
-    (-1, 0): "r"
-}
+SIDE_MAP = {(0, 1): "u", (0, -1): "d", (1, 0): "l", (-1, 0): "r"}
 
 
 def flood_fill(plots, x, y):

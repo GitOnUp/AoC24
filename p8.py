@@ -2,7 +2,7 @@ from collections import defaultdict
 
 
 def load_grid() -> [str]:
-    with open('p8.input.txt') as f:
+    with open("p8.input.txt") as f:
         return [[c for c in l.strip()] for l in f.readlines()]
 
 
@@ -29,9 +29,12 @@ if __name__ == "__main__":
         c_positions = positions[c]
         for ixpos, pos in enumerate(c_positions):
             working_position = c_positions[ixpos]
-            other_positions = c_positions[:ixpos] + c_positions[ixpos+1:]
+            other_positions = c_positions[:ixpos] + c_positions[ixpos + 1 :]
             for other_pos in other_positions:
-                dx, dy = working_position[0] - other_pos[0], working_position[1] - other_pos[1]
+                dx, dy = (
+                    working_position[0] - other_pos[0],
+                    working_position[1] - other_pos[1],
+                )
                 x, y = working_position[0] + dx, working_position[1] + dy
                 gp = at(grid, x, y)
                 if gp is not None and gp != "#":
@@ -47,11 +50,14 @@ if __name__ == "__main__":
         c_positions = positions[c]
         for ixpos, pos in enumerate(c_positions):
             working_position = c_positions[ixpos]
-            other_positions = c_positions[:ixpos] + c_positions[ixpos+1:]
+            other_positions = c_positions[:ixpos] + c_positions[ixpos + 1 :]
             for other_pos in other_positions:
                 current_working = working_position
                 x, y = current_working
-                dx, dy = working_position[0] - other_pos[0], working_position[1] - other_pos[1]
+                dx, dy = (
+                    working_position[0] - other_pos[0],
+                    working_position[1] - other_pos[1],
+                )
                 while True:
                     gp = at(grid, x, y)
                     if gp is None:

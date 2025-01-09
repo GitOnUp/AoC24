@@ -11,6 +11,7 @@ DIRECTION_D = {
 
 D_DIRECTION = {v: k for k, v in DIRECTION_D.items()}
 
+
 def next_direction(d: (int, int)) -> (int, int):
     if d == (-1, 0):
         return 0, -1
@@ -24,7 +25,7 @@ def next_direction(d: (int, int)) -> (int, int):
 def read_grid():
     grid = []
     start = None
-    with open('p6.input.txt', 'r') as f:
+    with open("p6.input.txt", "r") as f:
         for y, line in enumerate(f.readlines()):
             grid_line = []
             for x, c in enumerate(line.strip()):
@@ -72,14 +73,15 @@ def traverse(grid, start):
         y += dy
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     grid, start = read_grid()
     count, seen = traverse(grid, start)
     print(count)
     loops = 0
     for coords in seen.keys():
         x, y = coords
-        if (x, y) == start: continue
+        if (x, y) == start:
+            continue
         grid[y][x] = "#"
         count, _ = traverse(grid, start)
         if count < 0:

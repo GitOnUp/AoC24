@@ -4,6 +4,7 @@ from typing import Optional
 REGISTER_PATTERN = re.compile(r"Register [ABC]: (\d+)")
 PROGRAM_PATTERN = re.compile(r"Program: (.*)")
 
+
 def read_input():
     registers = []
     program = None
@@ -18,7 +19,7 @@ def read_input():
                 continue
             m = PROGRAM_PATTERN.match(line)
             if m:
-                program = [int(i) for i in m.group(1).split(',')]
+                program = [int(i) for i in m.group(1).split(",")]
     return registers, program
 
 
@@ -31,9 +32,9 @@ def process_one(registers, program, ip) -> (int, Optional[int]):
         return registers[operand - 4]
 
     opcode = program[ip]
-    operand = program[ip+1]
+    operand = program[ip + 1]
     if opcode == 0:
-        result = registers[0] // 2**combo_value(operand)
+        result = registers[0] // 2 ** combo_value(operand)
         registers[0] = result
         return ip + 2, None
     elif opcode == 1:
@@ -57,7 +58,7 @@ def process_one(registers, program, ip) -> (int, Optional[int]):
         output = combo_value(operand) % 8
         return ip + 2, output
     elif opcode == 6:
-        result = registers[0] // 2**combo_value(operand)
+        result = registers[0] // 2 ** combo_value(operand)
         registers[1] = result
         return ip + 2, None
     elif opcode == 7:
@@ -109,8 +110,8 @@ if __name__ == "__main__":
             output_arr = run([A_tmp, 0, 0], program)
             if output_arr == program:
                 return A_tmp
-            if output_arr == program[-len(output_arr):]:
-                r = search(A_tmp * 8, i+1)
+            if output_arr == program[-len(output_arr) :]:
+                r = search(A_tmp * 8, i + 1)
                 if r:
                     return r
         return None

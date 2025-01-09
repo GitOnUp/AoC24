@@ -36,13 +36,13 @@ def update_robot(robot: Robot, max_x: int, max_y: int) -> None:
     velx, vely = robot.vel
     newx, newy = posx + velx, posy + vely
     if newx >= max_x:
-        newx = newx-max_x
+        newx = newx - max_x
     if newx < 0:
-        newx = newx+max_x
+        newx = newx + max_x
     if newy >= max_y:
-        newy = newy-max_y
+        newy = newy - max_y
     if newy < 0:
-        newy = newy+max_y
+        newy = newy + max_y
     robot.pos = (newx, newy)
 
 
@@ -88,7 +88,7 @@ def incomplete_flood(robots: [Robot], max_x: int, max_y: int) -> int:
             if (x, y) in seen:
                 continue
             seen.add((x, y))
-            for (dx, dy) in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < max_x and 0 <= ny < max_y:
                     stack.append((nx, ny))
@@ -101,7 +101,9 @@ def check_tree(robots: [Robot], max_x: int, max_y: int, outfile: Path) -> None:
     if diff > 0:
         with open(outfile, "w") as f:
             print_grid(robots, max_x, max_y, f)
-        input(f"{str(f.name)} might be a tree ({diff}).  Press Enter to continue looking or Ctrl+C to quit.")
+        input(
+            f"{str(f.name)} might be a tree ({diff}).  Press Enter to continue looking or Ctrl+C to quit."
+        )
 
 
 if __name__ == "__main__":
@@ -136,4 +138,3 @@ if __name__ == "__main__":
         for robot in robots:
             update_robot(robot, max_x, max_y)
         check_tree(robots, max_x, max_y, out_dir / f"{i}.txt")
-

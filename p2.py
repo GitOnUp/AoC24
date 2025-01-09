@@ -1,9 +1,9 @@
 def read_input():
     ret = []
-    with open('p2.input.txt') as f:
+    with open("p2.input.txt") as f:
         lines = f.readlines()
         for line in lines:
-            vals = [int(s) for s in line.strip().split(' ')]
+            vals = [int(s) for s in line.strip().split(" ")]
             ret.append(vals)
     return ret
 
@@ -35,7 +35,7 @@ def run():
             safes += 1
             continue
         for bad_ix in range(len(report)):
-            if is_safe(report[:bad_ix] + report[bad_ix + 1:]):
+            if is_safe(report[:bad_ix] + report[bad_ix + 1 :]):
                 fixed_safes += 1
                 break
     return safes, safes + fixed_safes

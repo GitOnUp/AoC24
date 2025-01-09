@@ -12,6 +12,7 @@ def read_input():
             desired.append(l.strip())
     return towels, desired
 
+
 def solve():
     towels, desired = read_input()
     tmap = defaultdict(list)
@@ -25,9 +26,9 @@ def solve():
         next_char = _remaining[0]
         total = 0
         for next_pattern in tmap.get(next_char, []):
-            if _remaining[:len(next_pattern)] != next_pattern:
+            if _remaining[: len(next_pattern)] != next_pattern:
                 continue
-            next_remaining = _remaining[len(next_pattern):]
+            next_remaining = _remaining[len(next_pattern) :]
             total += count_possible(next_remaining)
         return total
 
