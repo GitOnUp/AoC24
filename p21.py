@@ -1,6 +1,6 @@
 import re
 from functools import cache
-from typing import Union, Tuple
+from typing import Tuple, Union
 
 
 def read_input():

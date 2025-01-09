@@ -102,7 +102,8 @@ def check_tree(robots: [Robot], max_x: int, max_y: int, outfile: Path) -> None:
         with open(outfile, "w") as f:
             print_grid(robots, max_x, max_y, f)
         input(
-            f"{str(f.name)} might be a tree ({diff}).  Press Enter to continue looking or Ctrl+C to quit."
+            f"{str(f.name)} might be a tree ({diff}). "
+            + "Press Enter to continue looking or Ctrl+C to quit."
         )
 
 

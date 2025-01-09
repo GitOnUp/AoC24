@@ -119,12 +119,14 @@ def traverse_gates(circuit):
         swap_wires(wires_to_swap)
         return find_exact(wires, op)
 
-    # start with x00, y00 and make the carry, no carry to take into account for least sig
+    # start with x00, y00 and make the carry
+    # no carry to take into account for least sig
     outwire = find_exact(["x00", "y00"], "AND")
     circuit = replace_wire_name(outwire, f"{CARRY_PRE}00")
 
     # then make half adds and half add carries for individual bits
-    # if exact match isn't found, find whichever one is there and then swap the other with the wire shared with it
+    # if exact match isn't found, find whichever one is there and then swap the other
+    # with the wire shared with it
     ixbit = 1
     while f"x{str(ixbit).zfill(2)}" in circuit:
         prev_suffix = str(ixbit - 1).zfill(2)
